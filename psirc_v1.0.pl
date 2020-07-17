@@ -2253,20 +2253,15 @@ sub output_merged_fli_fasta {
 				next;
 			}
 			
-			if ($_ =~ /.*C$/) {
+			if ($_ =~ /\s+C$/) {
 				print $OUT_R ">" . $merged_name . "\t" . "C\n";
-				#print $OUT ">" . $merged_name . "\t" . "C\n";
+
 			} else {
 				print $OUT_R ">" . $merged_name . "\n";
-				#print $OUT ">" . $merged_name . "\n";
+
 			}
 			my $seq = <$IN>;
 			print $OUT_R $seq;
-			
-			#if ($strand eq "-") {
-			#	$seq = rev_compl($seq);
-			#}
-			#print $OUT $seq;
 			
 			$already_outputted{$merged_name}++;
 			

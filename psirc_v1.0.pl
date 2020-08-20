@@ -2089,7 +2089,7 @@ sub merge_full_length_output {
 		if ($_ =~ /^>(\S+)/) {
 			my $fli_name = $1;
 			my $type;
-			if ($_ =~ /.*C$/) {
+			if ($_ =~ /\s+C$/) {
 				$type = "C";
 			} else {
 				$type = "L";

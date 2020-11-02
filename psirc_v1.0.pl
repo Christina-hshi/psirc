@@ -152,6 +152,7 @@ unless ($gen_indices) {
 }
 
 my $target_potential_backsplice_fasta = $mapping_dir . "/" . "potential_backsplice_transcripts.fa";
+my $target_potential_backsplice_fasta_no_copied_seq = $mapping_dir . "/" . "potential_backsplice_transcripts.no_copied_seq.fa";
 my $potential_backsplice_reads_1 = $mapping_dir . "/possible_bsj_reads_1.fastq.gz";
 my $potential_backsplice_reads_2 = $mapping_dir . "/possible_bsj_reads_2.fastq.gz";
 
@@ -1691,7 +1692,8 @@ sub final_mapping_and_output_fsjs {
 	#output full length isoform fasta
 	my $fli_output_fasta = $full_length_dir . "/full_length_isoforms_unmerged.fa";
 	open OUT, ">$fli_output_fasta" or die "can't open $fli_output_fasta\n";
-	open IN, "<$target_potential_backsplice_fasta" or die "can't open $target_potential_backsplice_fasta\n";
+	#open IN, "<$target_potential_backsplice_fasta" or die "can't open $target_potential_backsplice_fasta\n";
+	open IN, "<$target_potential_backsplice_fasta_no_copied_seq" or die "can't open $target_potential_backsplice_fasta_no_copied_seq\n";
 	while (<IN>) {
 		chomp;
 		if ($_ =~ m/^>(.*)/) {
@@ -1708,21 +1710,22 @@ sub final_mapping_and_output_fsjs {
 			my $seq = <IN>;
 			chomp($seq);
 			
-			my $assumed_breakpoint = $READ_LENGTHS - 1;
-			if (length($seq) <= $assumed_breakpoint) {
-				my $corrected_seq = substr($seq, (length($seq)/2));
-				print OUT ">" . $raw_to_output_name{$raw_name} . "\tC\n$corrected_seq\n";			
-				next;
-			}
-			my $minus_annealed = substr($seq, $assumed_breakpoint);
-			my $length_minus_annealed = length($minus_annealed);
-			if ($length_minus_annealed >= $assumed_breakpoint) {
-				print OUT ">" . $raw_to_output_name{$raw_name} ."\tC\n$minus_annealed\n";
-			} else {
-				my $corrected_seq = substr($seq, (length($seq)/2));
-				print OUT ">" . $raw_to_output_name{$raw_name} . "\tC\n$corrected_seq\n";
-			}
-		
+			#my $assumed_breakpoint = $READ_LENGTHS - 1;
+			#if (length($seq) <= $assumed_breakpoint) {
+			#	my $corrected_seq = substr($seq, (length($seq)/2));
+			#	print OUT ">" . $raw_to_output_name{$raw_name} . "\tC\n$corrected_seq\n";			
+			#	next;
+			#}
+			#my $minus_annealed = substr($seq, $assumed_breakpoint);
+			#my $length_minus_annealed = length($minus_annealed);
+			#if ($length_minus_annealed >= $assumed_breakpoint) {
+			#	print OUT ">" . $raw_to_output_name{$raw_name} ."\tC\n$minus_annealed\n";
+			#} else {
+			#	my $corrected_seq = substr($seq, (length($seq)/2));
+			#	print OUT ">" . $raw_to_output_name{$raw_name} . "\tC\n$corrected_seq\n";
+			#}
+			
+			print OUT ">" . $raw_to_output_name{$raw_name} . "\tC\n$seq\n";
 		}
 	}
 	close IN;
@@ -2082,8 +2085,18 @@ sub final_mapping_and_output_fsjs {
 sub merge_full_length_output {
 	my ($fli_output_fasta_unmerged, $alt_fsj_supporting_reads_unmerged, $fli_output_unmerged) = @_;
 	
+	my %isoform_to_strand;
+	open my $IN, "<$fli_output_unmerged" or die "can't open $fli_output_unmerged\n";
+	my $header = <$IN>;
+	while (<$IN>) {
+		my @line = split("\t", $_);
+		my ($isoform, $strand) = ($line[0], $line[5]);
+		$isoform_to_strand{$isoform} = $strand;
+	}
+	close $IN;
+	
 	my %unique_fli_seqs;
-	open my $IN, "<$fli_output_fasta_unmerged" or die "can't open $fli_output_fasta_unmerged\n";
+	open $IN, "<$fli_output_fasta_unmerged" or die "can't open $fli_output_fasta_unmerged\n";
 	while (<$IN>) {
 		chomp;
 		if ($_ =~ /^>(\S+)/) {
@@ -2096,7 +2109,7 @@ sub merge_full_length_output {
 			}
 			my $seq = <$IN>;
 			chomp($seq);
-			$unique_fli_seqs{$type}{$seq}{$fli_name}++;
+			$unique_fli_seqs{$type}{$isoform_to_strand{$fli_name}}{$seq}{$fli_name}++;
 		}
 	}
 	close $IN;
@@ -2104,11 +2117,13 @@ sub merge_full_length_output {
 	my %unmerged_to_merged_name;
 	
 	for my $type (keys %unique_fli_seqs) {
-		for my $seq (keys %{$unique_fli_seqs{$type}}) {
-			my @merged_fli_names = sort keys %{$unique_fli_seqs{$type}{$seq}};
-			my $merged_fli_name = join(",", @merged_fli_names);
-			for my $fli_name (@merged_fli_names) {
-				$unmerged_to_merged_name{$fli_name} = $merged_fli_name;
+		for my $strand (keys %{$unique_fli_seqs{$type}}) {
+			for my $seq (keys %{$unique_fli_seqs{$type}{$strand}}) {
+				my @merged_fli_names = sort keys %{$unique_fli_seqs{$type}{$strand}{$seq}};
+				my $merged_fli_name = join(",", @merged_fli_names);
+				for my $fli_name (@merged_fli_names) {
+					$unmerged_to_merged_name{$fli_name} = $merged_fli_name;
+				}
 			}
 		}
 	}
@@ -2907,7 +2922,8 @@ sub check_identical_to_outputted_bst {
 	
 	my %bst;
 	
-	open IN, "<$target_potential_backsplice_fasta" or die "can't open $target_potential_backsplice_fasta\n";
+	#open IN, "<$target_potential_backsplice_fasta" or die "can't open $target_potential_backsplice_fasta\n";
+	open IN, "<$target_potential_backsplice_fasta_no_copied_seq" or die "can't open $target_potential_backsplice_fasta_no_copied_seq\n";
 	while (<IN>) {
 		chomp;
 		if ($_ =~ m/^>(.*)/) {
@@ -2918,23 +2934,22 @@ sub check_identical_to_outputted_bst {
 			my $seq = <IN>;
 			chomp($seq);
 			
-			my $assumed_breakpoint = $READ_LENGTHS - 1;
-			if (length($seq) <= $assumed_breakpoint) {
-				my $corrected_seq = substr($seq, (length($seq)/2));
-				#print OUT ">$raw_name\n$corrected_seq\n";			
-				push @{$bst{$corrected_seq}}, $raw_name;
-				next;
-			}
-			my $minus_annealed = substr($seq, $assumed_breakpoint);
-			my $length_minus_annealed = length($minus_annealed);
-			if ($length_minus_annealed >= $assumed_breakpoint) {
-				#print OUT ">$raw_name\n$minus_annealed\n";
-				push @{$bst{$minus_annealed}}, $raw_name;
-			} else {
-				my $corrected_seq = substr($seq, (length($seq)/2));
-				#print OUT ">$raw_name\n$corrected_seq\n";
-				push @{$bst{$corrected_seq}}, $raw_name;
-			}
+			#my $assumed_breakpoint = $READ_LENGTHS - 1;
+			#if (length($seq) <= $assumed_breakpoint) {
+			#	my $corrected_seq = substr($seq, (length($seq)/2));		
+			#	push @{$bst{$corrected_seq}}, $raw_name;
+			#	next;
+			#}
+			#my $minus_annealed = substr($seq, $assumed_breakpoint);
+			#my $length_minus_annealed = length($minus_annealed);
+			#if ($length_minus_annealed >= $assumed_breakpoint) {
+			#	push @{$bst{$minus_annealed}}, $raw_name;
+			#} else {
+			#	my $corrected_seq = substr($seq, (length($seq)/2));
+			#	push @{$bst{$corrected_seq}}, $raw_name;
+			#}
+			
+			push @{$bst{$seq}}, $raw_name;
 		
 		}
 	}
@@ -3076,6 +3091,7 @@ sub collect_equiv_fsjs {
 sub extract_backsplice_transcripts {
 	my ($transcripts, $READ_LENGTHS) = @_;
 	open OUT, ">$target_potential_backsplice_fasta" or die "can't open $target_potential_backsplice_fasta\n";
+	open OUT_2, ">$target_potential_backsplice_fasta_no_copied_seq" or die "can't open $target_potential_backsplice_fasta_no_copied_seq\n";
 	open IN, "<$fa" or die "can't open $fa\n";
 	while (<IN>) {
 		chomp;
@@ -3127,8 +3143,9 @@ sub extract_backsplice_transcripts {
 					$end_anneal_to_beg_sequence = substr($end_exon_sequence,-($READ_LENGTHS-1));
 				}
 				
-				$transcript_sequence = $end_anneal_to_beg_sequence . $transcript_sequence;
 				my $transcript_name = $pure_name . "_" . $E_Bs;
+				print OUT_2 ">$transcript_name\n$transcript_sequence\n";
+				$transcript_sequence = $end_anneal_to_beg_sequence . $transcript_sequence;
 				print OUT ">$transcript_name\n$transcript_sequence\n";				
 
 			}
@@ -3136,6 +3153,7 @@ sub extract_backsplice_transcripts {
 	}
 	close IN;
 	close OUT;
+	close OUT_2;
 }
 
 

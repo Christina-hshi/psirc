@@ -2086,12 +2086,14 @@ sub merge_full_length_output {
 	my ($fli_output_fasta_unmerged, $alt_fsj_supporting_reads_unmerged, $fli_output_unmerged) = @_;
 	
 	my %isoform_to_strand;
+	my %isoform_to_locus;
 	open my $IN, "<$fli_output_unmerged" or die "can't open $fli_output_unmerged\n";
 	my $header = <$IN>;
 	while (<$IN>) {
 		my @line = split("\t", $_);
-		my ($isoform, $strand) = ($line[0], $line[5]);
+		my ($isoform, $locus, $strand) = ($line[0], $line[2], $line[5]);
 		$isoform_to_strand{$isoform} = $strand;
+		$isoform_to_locus{$isoform} = $locus;
 	}
 	close $IN;
 	
@@ -2109,7 +2111,7 @@ sub merge_full_length_output {
 			}
 			my $seq = <$IN>;
 			chomp($seq);
-			$unique_fli_seqs{$type}{$isoform_to_strand{$fli_name}}{$seq}{$fli_name}++;
+			$unique_fli_seqs{$type}{$isoform_to_strand{$fli_name}}{$isoform_to_locus{$fli_name}}{$seq}{$fli_name}++;
 		}
 	}
 	close $IN;
@@ -2118,11 +2120,13 @@ sub merge_full_length_output {
 	
 	for my $type (keys %unique_fli_seqs) {
 		for my $strand (keys %{$unique_fli_seqs{$type}}) {
-			for my $seq (keys %{$unique_fli_seqs{$type}{$strand}}) {
-				my @merged_fli_names = sort keys %{$unique_fli_seqs{$type}{$strand}{$seq}};
-				my $merged_fli_name = join(",", @merged_fli_names);
-				for my $fli_name (@merged_fli_names) {
-					$unmerged_to_merged_name{$fli_name} = $merged_fli_name;
+			for my $locus (keys %{$unique_fli_seqs{$type}{$strand}}) {
+				for my $seq (keys %{$unique_fli_seqs{$type}{$strand}{$locus}}) {
+					my @merged_fli_names = sort keys %{$unique_fli_seqs{$type}{$strand}{$locus}{$seq}};
+					my $merged_fli_name = join(",", @merged_fli_names);
+					for my $fli_name (@merged_fli_names) {
+						$unmerged_to_merged_name{$fli_name} = $merged_fli_name;
+					}
 				}
 			}
 		}
@@ -2891,6 +2895,7 @@ sub check_identical_to_orig_transcript {
 		chomp;
 		if ($_ =~ m/^.*:\d+-\d+_(.*)_Exon_Lengths_.*_Offsets_.*_/) {
 			my $seq = <IN>;
+			chomp($seq);
 			
 			my $pure_name = $1;
 			

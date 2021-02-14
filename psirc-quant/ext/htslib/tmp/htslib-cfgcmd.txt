@@ -1,0 +1,1 @@
+cmd='/mnt/nas2/hshi/Tools/kallisto-cir-exp/ext/htslib/configure;--prefix=;--disable-bz2;--disable-lzma;--disable-libcurl'

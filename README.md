@@ -9,7 +9,7 @@ Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Y
 
 ## Table of Contents
 
-<img align="right" src="./figs/psirc_BSJ_FLI.png"/>
+<!-- <img align="right" src="./figs/psirc_BSJ_FLI.png"/> -->
 
 - [External libraries](#library)
 - [Installation](#install)
@@ -181,7 +181,7 @@ First part of the __psirc__ pipeline for BSJ detection and full-length isoform i
 [Linux]: forked_kallisto/Linux/kallisto
 [Mac]: forked_kallisto/Mac/kallisto
 [psirc script (for detecting BSJs and inferring FLIs), currently psirc_v1.0.pl]: psirc_v1.0.pl
-[human]: https://drive.google.com/file/d/1n66tE6Ud7CbTc4YdXobstrgfBU2nJ7aE/view?usp=sharing
-[Epstein-barr virus (EBV)]: https://drive.google.com/file/d/1wetHEQUyg61Hg_IUN-Jrg4mJ22p284_E/view?usp=sharing
+[human]: https://drive.google.com/file/d/1wetHEQUyg61Hg_IUN-Jrg4mJ22p284_E/view?usp=sharing
+[Epstein-barr virus (EBV)]: https://drive.google.com/file/d/1n66tE6Ud7CbTc4YdXobstrgfBU2nJ7aE/view?usp=sharing
 [compiled from the source code]: https://github.com/Christina-hshi/kallisto-b.git
 [provided Perl script, create_custom_transcriptome_fa.pl]: create_custom_transcriptome_fa.pl

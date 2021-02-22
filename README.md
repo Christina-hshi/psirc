@@ -9,7 +9,7 @@ Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Y
 
 ## Table of Contents
 
-<img align="right" src="psirc_BSJ_FLI"/>
+<img align="right" src="./figs/psirc_BSJ_FLI.png"/>
 
 - [External libraries](#library)
 - [Installation](#install)
@@ -28,10 +28,12 @@ Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Y
 - **HDF5 C libraries**
 
 ## <a name="install"></a>Installation
+The first part of psirc was implemented with Perl script, which can be run directly. The second part of psirc was implemented with C and C++.
 ```
     git clone https://github.com/Christina-hshi/psirc.git
     cd psirc
     cd psirc-quant
+    #you may need to compile htslib under "ext/htslib" by following the README there ("make install" is optional)
     mkdir release
     cd release
     cmake ..
@@ -47,7 +49,7 @@ Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Y
 * Forked kallisto<sup>[1](#ref)</sup>: [Linux] or [Mac] executable
 
 ## <a name="synop_require"></a>Synopsis of requirements
-The [psirc script (for detecting BSJs and inferring FLIs), currently psirc_v1.0.pl] is a Perl script that fully automates the production of the BSJ and FLI outputs from the above requirements. Use this script for the first part of psirc.
+The __psirc__ pipeline has two parts. The first part is the [psirc script (for detecting BSJs and inferring FLIs), currently psirc_v1.0.pl] which is a Perl script that fully automates the production of the BSJ detection and FLI inference outputs from the above requirements. The second part is __psirc-quant__ which quantifies the abundances of FLIs based upon RNA-seq data.  
 
 <ins>Input: paired-end RNA-seq reads</ins>  
 The RNA-seq reads should be sequenced from a library preparation strategy that retains circular RNAs (circRNAs), such as ribosomal RNA (rRNA) depletion or exome-capture RNA-seq. We only accept paired-end reads as single-end reads have inherent read density biases and false positive alignments, making them not recommended for circRNA detection<sup>[2](#ref)</sup>. The paired-end reads need to be in FASTQ format and can be gzipped.
@@ -80,7 +82,7 @@ perl psirc_v1.0.pl -s output_directory gencode.v29.annotation.custom_transcripto
 ```
 
 **Index the inferred FLI**
-We require the header lines of the circular transcripts in fasta format should end with "\tC" to let the program know that they are circular transcripts. And header lines of linear transcripts should not end with "\tC".
+We require the header lines of the circular transcripts in fasta format should end with "\tC" to let the program know that they are circular transcripts. And header lines of linear transcripts should not end with "\tC". The outputs produced from psirc_v1.0.pl already meet this requirement, but the outputs produced by other FLI inference tools may not.
 ```
 psirc-quant index [arguments] <FLI in fasta files>
 
@@ -144,6 +146,10 @@ All detected BSJ supporting reads mapped to their BSJ transcripts in SAM format.
 <ins>FLI list</ins> (_full_length_isoforms.tsv_)  
 A list of all inferred full-length linear and circular isoforms. For circular isoforms, the information in the BSJ transcript list file is included again. Isoforms with alternative splicing have their alternatively spliced exon numbers and supporting read counts indicated. Isoforms with exactly the same sequence have their names merged with a "," separator.
 
+### FLI quantification ###
+<ins>Abundances of FLIs</ins> (_abundance.tsv_ and _abundance.h5_)
+Estimated abundances of FLIs in both tab delimited format("_abundance.tsv_") and HDF5 format("_abundance.h5_").
+
 <ins>**FLI sequences</ins> (_full_length_isoforms.fa_)**  
 A FASTA file containing the sequences of each inferred FLI. Circular isoforms have an additional _tab_ delimiter preceding a "C" character at the end of the FASTA header line. **This is the input file to psirc full-length circular and linear isoform quantification, _psirc-quant_.**
 
@@ -159,7 +165,7 @@ The FASTA headers in the FLI sequences file contain the names (ID) of each isofo
 There are hence four possible types of FLIs in this file: **linear, circular, linear alternative, and circular alternative**. These can be distinguished simply based on the exon connection information described above. Linear isoforms have no exon connection information at all, circular isoforms only have the "\_E*w*B*x*" part, linear alternative isoforms only have the "{\_<em>y<sub>i</sub></em>A*z<sub>i</sub>*}*" part, and circular alternative isoforms have the entire exon connection information.
 
 ## <a name="quant_out"></a>Details of the __psirc-quant__ output
-Estimated abundances of full-length transcripts are output in both tab delimited format("abundance.tsv") and HDF5 format("abundance.h5"). Other useful information collected during running of the program can be found in file "run_info.json".
+Estimated abundances of FLIs are output in both tab delimited format("abundance.tsv") and HDF5 format("abundance.h5"). Other useful information collected during running of the program can be found in file "run_info.json". _psirc-quant_ quantifies linear and circular FLIs together by maximizing the likelihood of generating the observed sequencing reads from FLIs.
 
 ## <a name="ref"></a>References
 
@@ -175,7 +181,7 @@ First part of the __psirc__ pipeline for BSJ detection and full-length isoform i
 [Linux]: forked_kallisto/Linux/kallisto
 [Mac]: forked_kallisto/Mac/kallisto
 [psirc script (for detecting BSJs and inferring FLIs), currently psirc_v1.0.pl]: psirc_v1.0.pl
-[human]: custom_transcriptome_fa/gencode.v29.annotation.custom_transcriptome.fa.gz
-[Epstein-barr virus (EBV)]: custom_transcriptome_fa/chrEBV_Akata_transcriptome.fa
-[compiled from the source code]: link_to_kallisto_b_repository
+[human]: https://drive.google.com/file/d/1n66tE6Ud7CbTc4YdXobstrgfBU2nJ7aE/view?usp=sharing
+[Epstein-barr virus (EBV)]: https://drive.google.com/file/d/1wetHEQUyg61Hg_IUN-Jrg4mJ22p284_E/view?usp=sharing
+[compiled from the source code]: https://github.com/Christina-hshi/kallisto-b.git
 [provided Perl script, create_custom_transcriptome_fa.pl]: create_custom_transcriptome_fa.pl

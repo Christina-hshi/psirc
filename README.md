@@ -3,9 +3,8 @@ Psirc is for full-length linear and circular transcript isoform reconstruction a
 
 The whole psirc pipeline has two main parts: 1. Detecting BSJs and inferring FLIs; and 2. Quantification of FLIs (both linear and circular FLIs at the same time). Each part works well stand-alone, but it is recommended to use them together.
 
-If you use psirc in your study, please cite(under review, online version can be found on bioRxiv):
-Quantifying full-length circular RNAs in cancer.(2021)
-Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Yun Chung, Ke-En Tan, Yat-Yuen Lim, Anna Chi-Man Tsang, Kwok-Wai Lo, Kevin Y. Yip
+If you use psirc in your study, please cite(under review, online version can be found on bioRxiv): \
+Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Yun Chung, Ke-En Tan, Yat-Yuen Lim, Anna Chi-Man Tsang, Kwok-Wai Lo, Kevin Y. Yip. Quantifying full-length circular RNAs in cancer. bioRxiv [Preprint]. February 05, 2021. Available from: https://doi.org/10.1101/2021.02.04.429722
 
 ## Table of Contents
 
@@ -82,9 +81,10 @@ perl psirc_v1.0.pl -s output_directory gencode.v29.annotation.custom_transcripto
 ```
 
 **Index the inferred FLI**
+
 We require the header lines of the circular transcripts in fasta format should end with "\tC" to let the program know that they are circular transcripts. And header lines of linear transcripts should not end with "\tC". The outputs produced from psirc_v1.0.pl already meet this requirement, but the outputs produced by other FLI inference tools may not.
 ```
-psirc-quant index [arguments] <FLI in fasta files>
+psirc-quant index [arguments] <FLI sequences>
 
 Required argument:
   -i, --index=STRING          Filename for the index to be constructed
@@ -146,15 +146,15 @@ All detected BSJ supporting reads mapped to their BSJ transcripts in SAM format.
 <ins>FLI list</ins> (_full_length_isoforms.tsv_)  
 A list of all inferred full-length linear and circular isoforms. For circular isoforms, the information in the BSJ transcript list file is included again. Isoforms with alternative splicing have their alternatively spliced exon numbers and supporting read counts indicated. Isoforms with exactly the same sequence have their names merged with a "," separator.
 
-### FLI quantification ###
-<ins>Abundances of FLIs</ins> (_abundance.tsv_ and _abundance.h5_)
-Estimated abundances of FLIs in both tab delimited format("_abundance.tsv_") and HDF5 format("_abundance.h5_").
-
 <ins>**FLI sequences</ins> (_full_length_isoforms.fa_)**  
 A FASTA file containing the sequences of each inferred FLI. Circular isoforms have an additional _tab_ delimiter preceding a "C" character at the end of the FASTA header line. **This is the input file to psirc full-length circular and linear isoform quantification, _psirc-quant_.**
 
-<ins>FLI alternative forward-splicing junctions supporting reads SAM file</ins> (_full_length_isoforms_alt_fsj_supporting_reads.sam_)  
+<ins>FLI alternative forward-splicing junctions supporting reads SAM file</ins> (_full_length_isoforms_alt_fsj_supporting_reads.sam_)
 All detected alternatively spliced reads mapped to their full-length isoforms in SAM format. These are again pseudo-alignments directly outputted from kallisto.
+
+### FLI quantification ###
+<ins>Abundances of FLIs</ins> (_abundance.tsv_ and _abundance.h5_)
+Estimated abundances of FLIs in both tab delimited format("_abundance.tsv_") and HDF5 format("_abundance.h5_").
 
 ## <a name="gen_cust_fa"></a>Generation of custom_transcriptome_fa
 custom_transcriptome_fas are generated through a [provided Perl script, create_custom_transcriptome_fa.pl]. The only two information required by create_custom_transcriptome_fa.pl are the _reference genome FASTA file_ and its _annotation GTF file_. The _reference genome FASTA file_ is <ins>one</ins> fasta file containing all the interested reference sequences of the genome (e.g. for human, chrs 1-22, M, X, and Y, each under a separate header), and the _annotation GTF file_ needs to include at least the ‘exon’ entries of the annotations. The necessary fields that need to be present in each **‘exon’** entry are **seqname**, **start**, **end**, **strand**, and "gene_name" and "exon_number" in **attributes**. For GTF files downloadable from official sources (Ensembl, GENCODE, etc.), the exon entries and the necessary fields are already all present.
@@ -177,7 +177,7 @@ Estimated abundances of FLIs are output in both tab delimited format("abundance.
 First part of the __psirc__ pipeline for BSJ detection and full-length isoform inference is distributed under the MIT license. Second part of the __psirc__ pipeline for full-length isoform quantification is developed based upon [kallisto](https://github.com/pachterlab/kallisto), and distributed under the BSD 2-Clause license.
 
 
-[custom_transcriptome_fa]: custom_transcriptome_fa/gencode.v29.annotation.custom_transcriptome.fa.gz
+[custom_transcriptome_fa]: https://drive.google.com/drive/folders/1ysdzWRUkuDoZ0tz1WZuszQK2dCd6BTq4?usp=sharing
 [Linux]: forked_kallisto/Linux/kallisto
 [Mac]: forked_kallisto/Mac/kallisto
 [psirc script (for detecting BSJs and inferring FLIs), currently psirc_v1.0.pl]: psirc_v1.0.pl

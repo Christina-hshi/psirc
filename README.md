@@ -1,7 +1,11 @@
 # psirc
-Psirc is for full-length linear and circular transcript isoform reconstruction and quantification from RNA-seq data.
+Psirc (<ins>ps</ins>eudo-alignment identification of c<ins>irc</ins>ular RNAs) is for back-splicing junction detection, full-length linear and circular transcript isoform inference and quantification from RNA-seq data.
 
-The whole psirc pipeline has two main parts: 1. Detecting BSJs and inferring FLIs; and 2. Quantification of FLIs (both linear and circular FLIs at the same time). Each part works well stand-alone, but it is recommended to use them together.
+The whole psirc pipeline has two main parts: 1. Detecting <ins>b</ins>ack-<ins>s</ins>plicing <ins>j</ins>unctions (BSJs) and inferring <ins>f</ins>ull-<ins>l</ins>ength <ins>i</ins>soforms (FLIs); and 2. Quantification of FLIs (both linear and circular FLIs at the same time). Each part works well stand-alone, but it is recommended to use them together.
+
+<p align="center" width="100%">
+  <img src="./figs/psirc_pipeline.png" width="500" alt="psirc pipeline"/>
+</p>
 
 If you use psirc in your study, please cite(under review, online version can be found on bioRxiv): \
 Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Yun Chung, Ke-En Tan, Yat-Yuen Lim, Anna Chi-Man Tsang, Kwok-Wai Lo, Kevin Y. Yip. Quantifying full-length circular RNAs in cancer. bioRxiv [Preprint]. February 05, 2021. Available from: https://doi.org/10.1101/2021.02.04.429722
@@ -65,17 +69,17 @@ A forked version of kallisto v0.43.1, which was modified to allow multi-threadin
 perl psirc_v1.0.pl -i gencode.v29.annotation.custom_transcriptome.fa kallisto
 ```
 
-**Produce both BSJ and FLI outputs in a single run (recommended):**  
+**Produce both BSJ detection and FLI inference outputs in a single run (recommended):**  
 ```sh
 perl psirc_v1.0.pl -f -o output_directory gencode.v29.annotation.custom_transcriptome.fa kallisto R1.fastq R2.fastq
 ```
 
-Produce BSJ output only:  
+Produce BSJ detection output only:  
 ```sh
 perl psirc_v1.0.pl -o output_directory gencode.v29.annotation.custom_transcriptome.fa kallisto R1.fastq R2.fastq
 ```
 
-Produce FLI output from the result of BSJ output only:
+Produce FLI inference output from the result of BSJ detection output only:
 ```sh
 perl psirc_v1.0.pl -s output_directory gencode.v29.annotation.custom_transcriptome.fa kallisto R1.fastq R2.fastq
 ```

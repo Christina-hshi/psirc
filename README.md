@@ -8,7 +8,8 @@ The whole psirc pipeline has two main parts: 1. Detecting <ins>b</ins>ack-<ins>s
 </p>
 
 If you use psirc in your study, please cite: \
-Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Yun Chung, Ke-En Tan, Yat-Yuen Lim, Anna Chi-Man Tsang, Kwok-Wai Lo, Kevin Y. Yip. Quantifying full-length circular RNAs in cancer. Genome Research 31.12 (2021): 2340-2353. Available from: https://genome.cshlp.org/content/31/12/2340.short
+**Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Yun Chung, Ke-En Tan, Yat-Yuen Lim, Anna Chi-Man Tsang, Kwok-Wai Lo, Kevin Y. Yip. Quantifying full-length circular RNAs in cancer. Genome Research 31.12 (2021): 2340-2353.** Available from: https://genome.cshlp.org/content/31/12/2340.short
+
 
 ## Table of Contents
 
@@ -135,7 +136,7 @@ Optional arguments:
                                 (optional for --genomebam, but recommended)
 ```
 
-*Please note that the <min-fragment-length> and <max-fragment-length> options are crucial when identifying fragments supporting back-splicing junctions. We suggest you first try <fragment-length> +|- 3\*<sd> as the min. and max. fragment length.*
+*Please note that the \<min-fragment-length\> and \<max-fragment-length\> options are crucial when identifying fragments supporting back-splicing junctions. We suggest you first try \<fragment-length\> +|- 3\*\<sd\> as the min. and max. fragment length.*
 
 ## <a name="synop_outs"></a>Synopsis of outputs
 ### BSJ detection ###

@@ -7,7 +7,7 @@ The whole psirc pipeline has two main parts: 1. Detecting <ins>b</ins>ack-<ins>s
   <img src="./figs/psirc_pipeline.png" width="500" alt="psirc pipeline"/>
 </p>
 
-If you use psirc in your study, please cite(under review, online version can be found on bioRxiv): \
+If you use psirc in your study, please cite: \
 Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Yun Chung, Ke-En Tan, Yat-Yuen Lim, Anna Chi-Man Tsang, Kwok-Wai Lo, Kevin Y. Yip. Quantifying full-length circular RNAs in cancer. Genome Research 31.12 (2021): 2340-2353. Available from: https://genome.cshlp.org/content/31/12/2340.short
 
 ## Table of Contents

@@ -8,7 +8,7 @@ The whole psirc pipeline has two main parts: 1. Detecting <ins>b</ins>ack-<ins>s
 </p>
 
 If you use psirc in your study, please cite(under review, online version can be found on bioRxiv): \
-Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Yun Chung, Ke-En Tan, Yat-Yuen Lim, Anna Chi-Man Tsang, Kwok-Wai Lo, Kevin Y. Yip. Quantifying full-length circular RNAs in cancer. bioRxiv [Preprint]. February 05, 2021. Available from: https://doi.org/10.1101/2021.02.04.429722
+Ken Hung-On Yu\*, Christina Huan Shi\*, Bo Wang, Savio Ho-Chit Chow, Grace Tin-Yun Chung, Ke-En Tan, Yat-Yuen Lim, Anna Chi-Man Tsang, Kwok-Wai Lo, Kevin Y. Yip. Quantifying full-length circular RNAs in cancer. Genome Research 31.12 (2021): 2340-2353. Available from: https://genome.cshlp.org/content/31/12/2340.short
 
 ## Table of Contents
 
@@ -84,6 +84,8 @@ Produce FLI inference output from the result of BSJ detection output only:
 perl psirc_v1.0.pl -s output_directory gencode.v29.annotation.custom_transcriptome.fa kallisto R1.fastq R2.fastq
 ```
 
+*where gencode.v29.annotation.custom_transcriptome.fa is the custom_transcriptome_fa, kallisto is the forked kallisto, output_directory is the user-specified directory to place the outputs, and R1.fastq R2.fastq are the input paired-end RNA-seq reads.*
+
 **Index the inferred FLI**
 
 We require the header lines of the circular transcripts in fasta format should end with "\tC" to let the program know that they are circular transcripts. And header lines of linear transcripts should not end with "\tC". The outputs produced from psirc_v1.0.pl already meet this requirement, but the outputs produced by other FLI inference tools may not.
@@ -133,7 +135,7 @@ Optional arguments:
                                 (optional for --genomebam, but recommended)
 ```
 
-*where gencode.v29.annotation.custom_transcriptome.fa is the custom_transcriptome_fa, kallisto is the forked kallisto, output_directory is the user-specified directory to place the outputs, and R1.fastq R2.fastq are the input paired-end RNA-seq reads.*
+*Please note that the <min-fragment-length> and <max-fragment-length> options are crucial when identifying fragments supporting back-splicing junctions. We suggest you first try <fragment-length> +|- 3\*<sd> as the min. and max. fragment length.*
 
 ## <a name="synop_outs"></a>Synopsis of outputs
 ### BSJ detection ###

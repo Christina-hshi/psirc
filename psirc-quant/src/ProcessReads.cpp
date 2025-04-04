@@ -16,6 +16,7 @@
 
 #include <fstream>
 #include <limits>
+#include <array>
 
 #include <iomanip>
 

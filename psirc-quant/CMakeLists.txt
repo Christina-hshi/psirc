@@ -37,20 +37,6 @@ ELSE(LINK MATCHES shared)
 ENDIF(LINK MATCHES static)
 
 
-include(ExternalProject)
-ExternalProject_Add(htslib
-    PREFIX ${PROJECT_SOURCE_DIR}/ext/htslib
-    SOURCE_DIR ${PROJECT_SOURCE_DIR}/ext/htslib
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ${PROJECT_SOURCE_DIR}/ext/htslib/configure
-        --prefix=${PREFIX} --disable-bz2 --disable-lzma --disable-libcurl
-    BUILD_COMMAND make lib-static
-    INSTALL_COMMAND ""
-)
-
-include_directories(${htslib_PREFIX}/src/htslib)
-
-
 
 # add_compile_options(-Wdeprecated-register)
 

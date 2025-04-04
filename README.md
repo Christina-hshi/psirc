@@ -15,20 +15,25 @@ If you use psirc in your study, please cite: \
 
 <!-- <img align="right" src="./figs/psirc_BSJ_FLI.png"/> -->
 
-- [External libraries](#library)
-- [Installation](#install)
-- [Requirements](#require)
-- [Synopsis of requirements](#synop_require)
-- [General usages](#gen_usages)
-- [Synopsis of outputs](#synop_outs)
-- [Generation of custom_transcriptome_fa](#gen_cust_fa)
-- [Details of the FLI sequences output](#fli_out)
-- [Details of the psirc-quant output](#quant_out)
-- [References](#ref)
-- [License](#license)
+- [psirc](#psirc)
+  - [Table of Contents](#table-of-contents)
+  - [External libraries](#external-libraries)
+  - [Installation](#installation)
+  - [Requirements](#requirements)
+  - [Synopsis of requirements](#synopsis-of-requirements)
+  - [General usages](#general-usages)
+  - [Synopsis of outputs](#synopsis-of-outputs)
+    - [BSJ detection](#bsj-detection)
+    - [FLI inference](#fli-inference)
+    - [FLI quantification](#fli-quantification)
+  - [Generation of custom\_transcriptome\_fa](#generation-of-custom_transcriptome_fa)
+  - [Details of the FLI sequences output](#details-of-the-fli-sequences-output)
+  - [Details of the __psirc-quant__ output](#details-of-the-psirc-quant-output)
+  - [References](#references)
+  - [License](#license)
 
 ## <a name="library"></a>External libraries
-- **zlib**
+- **htslib**
 - **HDF5 C libraries**
 
 ## <a name="install"></a>Installation
@@ -37,7 +42,6 @@ The first part of psirc was implemented with Perl script, which can be run direc
     git clone https://github.com/Christina-hshi/psirc.git
     cd psirc
     cd psirc-quant
-    #you may need to compile htslib under "ext/htslib" by following the README there ("make install" is optional)
     mkdir release
     cd release
     cmake ..

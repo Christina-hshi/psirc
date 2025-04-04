@@ -7,6 +7,7 @@
 #include <getopt.h>
 #include <thread>
 #include <time.h>
+#include <array>
 
 #include <cstdio>
 
